@@ -30,7 +30,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="打开目录" Style="{StaticResource SecondaryButton}" FontSize="11" Padding="6,2"
+                                <Button Content="重新打开" Style="{StaticResource SecondaryButton}" FontSize="11" Padding="6,2"
+                                        Command="{Binding DataContext.ReopenFileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"/>
+                                <Button Content="打开目录" Style="{StaticResource SecondaryButton}" FontSize="11" Padding="6,2" Margin="4,0,0,0"
                                         Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"/>
                                 <Button Content="删除" Style="{StaticResource SecondaryButton}" FontSize="11" Padding="6,2" Margin="4,0,0,0"

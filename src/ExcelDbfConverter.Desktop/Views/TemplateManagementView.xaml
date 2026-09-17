@@ -44,6 +44,7 @@
                 <TextBox Text="{Binding EditorDescription, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="80" Margin="0,0,0,12"/>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="保存" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" MinWidth="90"/>
+                    <Button Content="复制" Style="{StaticResource SecondaryButton}" Command="{Binding CopyCommand}" MinWidth="90" Margin="8,0,0,0"/>
                     <Button Content="删除" Style="{StaticResource SecondaryButton}" Command="{Binding DeleteCommand}" MinWidth="90" Margin="8,0,0,0"/>
                 </StackPanel>
                 <TextBlock Text="提示：模板保存的是字段配置（Excel 列名、DBF 字段名、类型、长度、小数位），可在 Excel → DBF 页面选择应用。" Foreground="{StaticResource MutedTextBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,16,0,0"/>

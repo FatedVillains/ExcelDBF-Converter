@@ -14,11 +14,22 @@ public sealed partial class HistoryViewModel : ViewModelBase
 {
     private readonly IHistoryService _historyService;
     private readonly IDialogService _dialogService;
+    private readonly INavigationService _navigation;
+    private readonly ExcelToDbfViewModel _excelToDbf;
+    private readonly DbfToExcelViewModel _dbfToExcel;
 
-    public HistoryViewModel(IHistoryService historyService, IDialogService dialogService)
+    public HistoryViewModel(
+        IHistoryService historyService,
+        IDialogService dialogService,
+        INavigationService navigation,
+        ExcelToDbfViewModel excelToDbf,
+        DbfToExcelViewModel dbfToExcel)
     {
         _historyService = historyService;
         _dialogService = dialogService;
+        _navigation = navigation;
+        _excelToDbf = excelToDbf;
+        _dbfToExcel = dbfToExcel;
 
         Entries = new ObservableCollection<ConversionHistoryEntry>();
 
@@ -26,6 +37,7 @@ public sealed partial class HistoryViewModel : ViewModelBase
         DeleteCommand = new AsyncRelayCommand<ConversionHistoryEntry?>(DeleteAsync);
         ClearCommand = new AsyncRelayCommand(ClearAsync);
         OpenFolderCommand = new RelayCommand<ConversionHistoryEntry?>(OpenFolder);
+        ReopenFileCommand = new AsyncRelayCommand<ConversionHistoryEntry?>(ReopenFileAsync);
     }
 
     public ObservableCollection<ConversionHistoryEntry> Entries { get; }
@@ -37,6 +49,8 @@ public sealed partial class HistoryViewModel : ViewModelBase
     public IAsyncRelayCommand ClearCommand { get; }
 
     public IRelayCommand<ConversionHistoryEntry?> OpenFolderCommand { get; }
+
+    public IAsyncRelayCommand<ConversionHistoryEntry?> ReopenFileCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -86,6 +100,35 @@ public sealed partial class HistoryViewModel : ViewModelBase
         if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
         {
             Process.Start(new ProcessStartInfo("explorer.exe", $"/select,\"{path}\"") { UseShellExecute = true });
+        }
+    }
+
+    private async Task ReopenFileAsync(ConversionHistoryEntry? entry)
+    {
+        if (entry is null)
+        {
+            return;
+        }
+
+        if (!File.Exists(entry.SourceFilePath))
+        {
+            _dialogService.ShowMessage("提示", $"源文件不存在：{entry.SourceFilePath}");
+            return;
+        }
+
+        switch (entry.ConversionType)
+        {
+            case Core.Enums.ConversionType.ExcelToDbf:
+                _navigation.CurrentViewModel = _excelToDbf;
+                await _excelToDbf.LoadFileAsync(entry.SourceFilePath);
+                break;
+            case Core.Enums.ConversionType.DbfToExcel:
+                _navigation.CurrentViewModel = _dbfToExcel;
+                await _dbfToExcel.LoadFileAsync(entry.SourceFilePath);
+                break;
+            default:
+                _dialogService.ShowMessage("提示", "无法识别的转换类型。");
+                break;
         }
     }
 }

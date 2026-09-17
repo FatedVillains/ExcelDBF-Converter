@@ -24,6 +24,7 @@ public sealed partial class TemplateManagementViewModel : ViewModelBase
         SaveCommand = new AsyncRelayCommand(SaveAsync);
         DeleteCommand = new AsyncRelayCommand(DeleteAsync);
         NewCommand = new RelayCommand(NewTemplate);
+        CopyCommand = new AsyncRelayCommand(CopyAsync);
         ImportCommand = new AsyncRelayCommand(ImportAsync);
         ExportCommand = new AsyncRelayCommand(ExportAsync);
     }
@@ -53,6 +54,8 @@ public sealed partial class TemplateManagementViewModel : ViewModelBase
     public IAsyncRelayCommand ImportCommand { get; }
 
     public IAsyncRelayCommand ExportCommand { get; }
+
+    public IAsyncRelayCommand CopyCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -119,6 +122,40 @@ public sealed partial class TemplateManagementViewModel : ViewModelBase
         await RefreshAsync();
         SelectedTemplate = null;
         IsEditing = false;
+    }
+
+    private async Task CopyAsync()
+    {
+        if (SelectedTemplate is null)
+        {
+            return;
+        }
+
+        var copy = new TemplateInfo
+        {
+            Name = SelectedTemplate.Name + "(副本)",
+            Description = SelectedTemplate.Description,
+            Version = SelectedTemplate.Version,
+            Fields = SelectedTemplate.Fields.Select(f => new TemplateFieldInfo
+            {
+                Id = 0,
+                TemplateId = 0,
+                ExcelColumnName = f.ExcelColumnName,
+                DbfFieldName = f.DbfFieldName,
+                DbfFieldType = f.DbfFieldType,
+                FieldLength = f.FieldLength,
+                DecimalCount = f.DecimalCount,
+                IsRequired = f.IsRequired,
+                SortOrder = f.SortOrder,
+            }).ToList(),
+        };
+
+        await _templateService.SaveAsync(copy);
+        await RefreshAsync();
+        SelectedTemplate = copy;
+        IsEditing = true;
+        EditorName = copy.Name;
+        EditorDescription = copy.Description;
     }
 
     private async Task ImportAsync()
