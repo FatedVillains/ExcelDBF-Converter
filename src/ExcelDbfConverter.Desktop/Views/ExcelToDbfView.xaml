@@ -1,0 +1,139 @@
+<UserControl x:Class="ExcelDbfConverter.Desktop.Views.ExcelToDbfView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ExcelDbfConverter.Desktop.ViewModels"
+             xmlns:enums="clr-namespace:ExcelDbfConverter.Core.Enums;assembly=ExcelDbfConverter.Core"
+             mc:Ignorable="d"
+             d:DesignHeight="650" d:DesignWidth="950">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,8,0">
+            <TextBlock Text="Excel 转 DBF" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,16"/>
+
+            <!-- 文件选择 -->
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="1. 选择 Excel 文件" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <DockPanel>
+                        <Button Content="选择文件" Style="{StaticResource SecondaryButton}" DockPanel.Dock="Right" Command="{Binding BrowseCommand}"/>
+                        <TextBox Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Sheet 选择 -->
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="2. 选择 Sheet" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <ComboBox ItemsSource="{Binding Sheets}"
+                              SelectedItem="{Binding SelectedSheet}"
+                              DisplayMemberPath="Name"
+                              Width="300" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 字段配置 -->
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <Button Content="恢复自动识别" Style="{StaticResource SecondaryButton}" Command="{Binding ResetDetectCommand}"/>
+                            <Button Content="应用模板" Style="{StaticResource SecondaryButton}" Command="{Binding ApplyTemplateCommand}" Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Text="3. 字段配置" FontWeight="SemiBold"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0,0,0,8">
+                        <TextBlock Text="模板：" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Templates}"
+                                  SelectedItem="{Binding SelectedTemplate}"
+                                  DisplayMemberPath="Name"
+                                  Width="260" Margin="8,0,0,0" HorizontalAlignment="Left"/>
+                    </DockPanel>
+
+                    <DataGrid ItemsSource="{Binding Mappings}" SelectedItem="{Binding SelectedMapping}"
+                              AutoGenerateColumns="False" CanUserAddRows="False" MinHeight="180" MaxHeight="280"
+                              Background="{StaticResource CardBrush}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Excel 字段" Binding="{Binding ExcelColumnName}" IsReadOnly="True" Width="140"/>
+                            <DataGridTextColumn Header="DBF 字段" Binding="{Binding DbfFieldName}" Width="140"/>
+                            <DataGridComboBoxColumn Header="类型" SelectedItemBinding="{Binding DbfFieldType}" Width="160"
+                                                    ItemsSource="{Binding DataContext.FieldTypes, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            <DataGridTextColumn Header="长度" Binding="{Binding Length}" Width="80"/>
+                            <DataGridTextColumn Header="小数位" Binding="{Binding DecimalCount}" Width="80"/>
+                            <DataGridCheckBoxColumn Header="导出" Binding="{Binding IsExport}" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button Content="新增字段" Style="{StaticResource SecondaryButton}" Command="{Binding AddFieldCommand}"/>
+                        <Button Content="删除字段" Style="{StaticResource SecondaryButton}" Command="{Binding DeleteFieldCommand}" CommandParameter="{Binding SelectedMapping}" Margin="8,0,0,0"/>
+                        <Button Content="上移" Style="{StaticResource SecondaryButton}" Command="{Binding MoveUpCommand}" CommandParameter="{Binding SelectedMapping}" Margin="8,0,0,0"/>
+                        <Button Content="下移" Style="{StaticResource SecondaryButton}" Command="{Binding MoveDownCommand}" CommandParameter="{Binding SelectedMapping}" Margin="8,0,0,0"/>
+                        <Button Content="全部导出" Style="{StaticResource SecondaryButton}" Command="{Binding SelectAllCommand}" Margin="8,0,0,0"/>
+                        <Button Content="全部取消" Style="{StaticResource SecondaryButton}" Command="{Binding DeselectAllCommand}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 数据预览 -->
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <TextBlock Text="4. 数据预览" FontWeight="SemiBold"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <TextBlock Text="预览行数：" VerticalAlignment="Center"/>
+                            <ComboBox ItemsSource="{Binding PreviewRowCountOptions}" SelectedItem="{Binding SelectedPreviewRowCount}" Width="80" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </DockPanel>
+                    <TextBlock Text="{Binding PreviewInfo}" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,6"/>
+                    <DataGrid ItemsSource="{Binding PreviewTable}" AutoGenerateColumns="True" IsReadOnly="True" MaxHeight="220" Background="{StaticResource CardBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 转换 -->
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="5. 转换" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="输出文件：" VerticalAlignment="Center"/>
+                        <DockPanel Grid.Column="1">
+                            <Button Content="浏览" Style="{StaticResource SecondaryButton}" DockPanel.Dock="Right" Command="{Binding BrowseOutputCommand}"/>
+                            <TextBox Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                        <TextBlock Grid.Row="1" Text="DBF 编码：" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Encodings}" SelectedItem="{Binding SelectedEncoding}" Width="200" HorizontalAlignment="Left" Margin="4,8,0,0"/>
+
+                        <TextBlock Grid.Row="2" Text="错误处理：" VerticalAlignment="Center" Margin="0,8,0,0"/>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4,8,0,0">
+                            <ComboBox ItemsSource="{Binding ErrorHandlingOptions}" SelectedItem="{Binding SelectedErrorHandling}" Width="200"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="4,16,0,0">
+                            <Button Content="开始转换" Style="{StaticResource PrimaryButton}" Command="{Binding ConvertCommand}" MinWidth="120"/>
+                            <Button Content="取消" Style="{StaticResource SecondaryButton}" Command="{Binding CancelCommand}" MinWidth="80" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <ProgressBar Grid.Row="3" Height="8" Maximum="100" Value="{Binding ProgressPercentage}" Margin="0,12,0,0"/>
+                    <TextBlock Text="{Binding ProgressText}" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,4,0,0"/>
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

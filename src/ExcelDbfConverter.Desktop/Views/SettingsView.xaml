@@ -1,0 +1,53 @@
+<UserControl x:Class="ExcelDbfConverter.Desktop.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="650" d:DesignWidth="950">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,8,0">
+            <TextBlock Text="系统设置" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,16"/>
+
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="默认输出目录" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <DockPanel>
+                        <Button Content="选择目录" Style="{StaticResource SecondaryButton}" DockPanel.Dock="Right" Command="{Binding BrowseOutputDirCommand}"/>
+                        <TextBox Text="{Binding DefaultOutputDirectory, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="默认格式与编码" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="默认 Excel 格式：" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding ExcelFormats}" SelectedItem="{Binding DefaultExcelFormat}" Width="120" Margin="4,0,0,0"/>
+                        <TextBlock Text="默认 DBF 编码：" VerticalAlignment="Center" Margin="24,0,0,0"/>
+                        <ComboBox ItemsSource="{Binding Encodings}" SelectedItem="{Binding DefaultDbfEncoding}" Width="120" Margin="4,0,0,0"/>
+                        <TextBlock Text="数据预览行数：" VerticalAlignment="Center" Margin="24,0,0,0"/>
+                        <ComboBox ItemsSource="{Binding PreviewOptions}" SelectedItem="{Binding PreviewRowCount}" Width="90" Margin="4,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{StaticResource CardBrush}" CornerRadius="6" Padding="16" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="自动文本识别关键词" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBlock Text="字段名包含这些关键词时，自动识别为字符型（避免身份证号、手机号等被识别为数字）。" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,8"/>
+                    <ListBox ItemsSource="{Binding Keywords}" SelectedItem="{Binding SelectedKeyword}" MaxHeight="140"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBox Text="{Binding NewKeyword, UpdateSourceTrigger=PropertyChanged}" Width="180"/>
+                        <Button Content="新增" Style="{StaticResource SecondaryButton}" Command="{Binding AddKeywordCommand}" Margin="8,0,0,0"/>
+                        <Button Content="删除" Style="{StaticResource SecondaryButton}" Command="{Binding RemoveKeywordCommand}" CommandParameter="{Binding SelectedKeyword}" Margin="8,0,0,0"/>
+                        <Button Content="恢复默认" Style="{StaticResource SecondaryButton}" Command="{Binding ResetKeywordsCommand}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Button Content="保存设置" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" MinWidth="120" HorizontalAlignment="Left"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

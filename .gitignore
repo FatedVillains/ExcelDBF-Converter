@@ -1,0 +1,22 @@
+# Build output
+bin/
+obj/
+publish/
+
+# NuGet local packages (workspace-local cache)
+.nuget/
+
+# Research scratch
+.firecrawl/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
