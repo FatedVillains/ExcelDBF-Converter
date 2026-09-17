@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDbfConverter.Desktop",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDbfConverter.Infrastructure.Tests", "tests\ExcelDbfConverter.Infrastructure.Tests\ExcelDbfConverter.Infrastructure.Tests.csproj", "{5C691ACA-666C-4178-8468-3FDF1CFA12DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDbfConverter.Integration.Tests", "tests\ExcelDbfConverter.Integration.Tests\ExcelDbfConverter.Integration.Tests.csproj", "{75E84E09-DD3D-4220-A168-E9A5DDD79333}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,18 @@ Global
 		{5C691ACA-666C-4178-8468-3FDF1CFA12DE}.Release|x64.Build.0 = Release|Any CPU
 		{5C691ACA-666C-4178-8468-3FDF1CFA12DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C691ACA-666C-4178-8468-3FDF1CFA12DE}.Release|x86.Build.0 = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|x64.Build.0 = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Debug|x86.Build.0 = Debug|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|x64.ActiveCfg = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|x64.Build.0 = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|x86.ActiveCfg = Release|Any CPU
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,5 +111,6 @@ Global
 		{08BF2BA9-9B8F-4535-8FFF-19654F6F3D2B} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{FAA77E52-B356-4543-94A7-CE927416EF4E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{5C691ACA-666C-4178-8468-3FDF1CFA12DE} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{75E84E09-DD3D-4220-A168-E9A5DDD79333} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

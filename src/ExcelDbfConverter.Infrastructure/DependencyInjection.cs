@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IDbfReader, DbfReader>();
         services.AddTransient<IDbfWriter, DbfWriter>();
+        services.AddSingleton<Func<IDbfWriter>>(sp => () => sp.GetRequiredService<IDbfWriter>());
         services.AddSingleton<IExcelReader, NpoiExcelReader>();
         services.AddSingleton<IExcelWriter, NpoiExcelWriter>();
 

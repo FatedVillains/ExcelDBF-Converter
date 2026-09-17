@@ -3,9 +3,9 @@ namespace ExcelDbfConverter.Infrastructure.Configuration;
 /// <summary>应用目录布局（绿色免安装：数据、模板、日志、配置均位于程序目录下）。</summary>
 public sealed class AppPaths
 {
-    public AppPaths()
+    public AppPaths(string? baseDirectory = null)
     {
-        BaseDirectory = AppContext.BaseDirectory;
+        BaseDirectory = baseDirectory ?? AppContext.BaseDirectory;
         DataDirectory = Path.Combine(BaseDirectory, "data");
         TemplatesDirectory = Path.Combine(BaseDirectory, "templates");
         LogsDirectory = Path.Combine(BaseDirectory, "logs");

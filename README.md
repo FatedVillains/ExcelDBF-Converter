@@ -36,7 +36,9 @@ ExcelDbfConverter
 │   ├── ExcelDbfConverter.Infrastructure   # NPOI Excel、DBF、SQLite、日志、配置
 │   └── ExcelDbfConverter.Desktop          # WPF UI（MVVM）
 ├── tests
-│   └── ExcelDbfConverter.Infrastructure.Tests
+│   ├── ExcelDbfConverter.Infrastructure.Tests   # 单元测试（10 项）
+│   └── ExcelDbfConverter.Integration.Tests      # 集成测试（29 项）
+├── run-tests.ps1                        # PowerShell 测试脚本
 └── ExcelDbfConverter.sln
 ```
 
@@ -48,9 +50,30 @@ dotnet build ExcelDbfConverter.sln -c Release
 
 ## 测试
 
-```bash
-dotnet test tests/ExcelDbfConverter.Infrastructure.Tests
+### 快速运行（PowerShell）
+
+```powershell
+.\run-tests.ps1
+.\run-tests.ps1 -SkipPublish          # 跳过发布
+.\run-tests.ps1 -Configuration Debug  # Debug 模式
 ```
+
+### 分别运行
+
+```bash
+# 单元测试（10 项：DBF 往返、字段类型识别）
+dotnet test tests/ExcelDbfConverter.Infrastructure.Tests -c Release
+
+# 集成测试（29 项：Excel↔DBF 转换、错误处理、模板/历史/设置）
+dotnet test tests/ExcelDbfConverter.Integration.Tests -c Release
+```
+
+### 测试覆盖
+
+| 测试项目 | 数量 | 覆盖内容 |
+|----------|------|----------|
+| Infrastructure.Tests | 10 | DBF 8 种字段类型写读往返、数值溢出、GBK 编码、字段类型自动识别 |
+| Integration.Tests | 29 | Excel→DBF 全类型转换、DBF→Excel 往返、XLS 格式、错误处理(Stop/SkipRow/SetNull)、错误报告生成、空文件、取消、批量转换(Rename/Skip)、模板 CRUD/导入导出/复制/匹配、历史记录 CRUD、设置持久化 |
 
 ## 发布（绿色免安装，win-x64，自包含）
 
