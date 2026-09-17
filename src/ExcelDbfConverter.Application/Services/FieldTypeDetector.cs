@@ -101,13 +101,13 @@ public sealed class FieldTypeDetector : IFieldTypeDetector
         {
             return DbfFieldType.Numeric;
         }
-        if (values.All(IsDateCandidate))
-        {
-            return DbfFieldType.Date;
-        }
         if (values.All(IsDateTimeCandidate))
         {
             return DbfFieldType.DateTime;
+        }
+        if (values.All(IsDateCandidate))
+        {
+            return DbfFieldType.Date;
         }
         return DbfFieldType.Character;
     }
@@ -166,20 +166,27 @@ public sealed class FieldTypeDetector : IFieldTypeDetector
         }
         if (value is string s)
         {
-            return DateOnly.TryParse(s.Trim(), out _);
+            var trimmed = s.Trim();
+            return DateTime.TryParseExact(trimmed, new[] { "yyyy-MM-dd", "yyyy/M/d", "yyyy年M月d日" },
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _);
         }
         return false;
     }
 
     private static bool IsDateTimeCandidate(object? value)
     {
-        if (value is DateTime)
+        if (value is DateTime dt)
         {
-            return true;
+            return dt.TimeOfDay != TimeSpan.Zero;
         }
         if (value is string s)
         {
-            return DateTime.TryParse(s.Trim(), out _);
+            var trimmed = s.Trim();
+            if (trimmed.Length < 11 || !trimmed.Contains(' ') && !trimmed.Contains(':') && !trimmed.Contains('T'))
+            {
+                return false;
+            }
+            return DateTime.TryParse(trimmed, out _);
         }
         return false;
     }

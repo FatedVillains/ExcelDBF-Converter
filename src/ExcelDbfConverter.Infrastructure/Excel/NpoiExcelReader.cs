@@ -20,12 +20,12 @@ public sealed class NpoiExcelReader : IExcelReader
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var sheet = workbook.GetSheetAt(i);
-                    result.Add(new ExcelSheetInfo
-                    {
-                        Name = sheet.SheetName,
-                        RowCount = Math.Max(0, sheet.LastRowNum),
-                        ColumnCount = GetColumnCount(sheet),
-                    });
+                result.Add(new ExcelSheetInfo
+                {
+                    Name = sheet.SheetName,
+                    RowCount = Math.Max(0, sheet.LastRowNum + 1),
+                    ColumnCount = GetColumnCount(sheet),
+                });
                 }
                 return (IReadOnlyList<ExcelSheetInfo>)result;
             }
@@ -79,7 +79,7 @@ public sealed class NpoiExcelReader : IExcelReader
                 {
                     Columns = columns,
                     Rows = rows,
-                    TotalRows = Math.Max(0, lastRow),
+                    TotalRows = Math.Max(0, lastRow + 1),
                 };
             }
             finally
@@ -138,8 +138,16 @@ public sealed class NpoiExcelReader : IExcelReader
 
     private static int GetColumnCount(ISheet sheet)
     {
-        var header = sheet.GetRow(0);
-        return header is null ? 0 : header.LastCellNum;
+        int maxCols = 0;
+        for (int r = 0; r <= sheet.LastRowNum; r++)
+        {
+            var row = sheet.GetRow(r);
+            if (row is not null && row.LastCellNum > maxCols)
+            {
+                maxCols = row.LastCellNum;
+            }
+        }
+        return maxCols;
     }
 
     private static string GetHeaderName(ICell? cell, int index)

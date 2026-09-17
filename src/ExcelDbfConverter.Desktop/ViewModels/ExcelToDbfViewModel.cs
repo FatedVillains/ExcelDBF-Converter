@@ -385,7 +385,11 @@ public sealed partial class ExcelToDbfViewModel : ViewModelBase
 
             var result = await _conversionService.ConvertExcelToDbfAsync(request, progress, _cts.Token);
 
-            if (result.Status == ConversionStatus.Success || result.Status == ConversionStatus.Partial)
+            if (result.Status == ConversionStatus.Cancelled)
+            {
+                StatusMessage = "转换已取消。";
+            }
+            else if (result.Status == ConversionStatus.Success || result.Status == ConversionStatus.Partial)
             {
                 ProgressPercentage = 100;
                 StatusMessage = $"转换完成：成功 {result.SuccessRows} 行，失败 {result.FailedRows} 行。输出：{result.OutputFilePath}";

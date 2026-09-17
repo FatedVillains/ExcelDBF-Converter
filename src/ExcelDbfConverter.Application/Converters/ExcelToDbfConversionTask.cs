@@ -149,7 +149,6 @@ public sealed class ExcelToDbfConversionTask : IConversionTask<ExcelToDbfRequest
             result.TotalRows = currentRow;
             result.OutputFilePath = request.OutputPath;
             result.Status = errors.Count > 0 ? ConversionStatus.Partial : ConversionStatus.Success;
-            result.FailedRows = errors.Count;
             result.Errors = errors;
             result.Elapsed = stopwatch.Elapsed;
 
